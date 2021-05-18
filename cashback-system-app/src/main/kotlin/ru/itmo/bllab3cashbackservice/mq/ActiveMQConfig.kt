@@ -1,4 +1,4 @@
-package ru.itmo.bllab3cashbackservice.service
+package ru.itmo.bllab3cashbackservice.mq
 
 import org.apache.activemq.ActiveMQConnectionFactory
 import org.springframework.beans.factory.annotation.Value
@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory
 import org.springframework.jms.core.JmsTemplate
+import java.util.*
 import javax.jms.ConnectionFactory
 
 
@@ -15,9 +16,10 @@ class ActiveMQConfig {
     private val brokerUrl: String? = null
 
     @Bean
-    fun connectionFactory(): ConnectionFactory {
+    fun connectionFactory(): ConnectionFactory? {
         val activeMQConnectionFactory = ActiveMQConnectionFactory()
         activeMQConnectionFactory.brokerURL = brokerUrl
+        activeMQConnectionFactory.trustedPackages = arrayListOf("ru.itmo.bllab3messages","java")
         return activeMQConnectionFactory
     }
 
@@ -32,8 +34,8 @@ class ActiveMQConfig {
     @Bean
     fun jmsListenerContainerFactory(): DefaultJmsListenerContainerFactory? {
         val factory = DefaultJmsListenerContainerFactory()
-        factory.setConnectionFactory(connectionFactory())
-        factory.setPubSubDomain(true)
+        factory.setConnectionFactory(connectionFactory()!!)
+//        factory.setPubSubDomain(true)
         return factory
     }
 }

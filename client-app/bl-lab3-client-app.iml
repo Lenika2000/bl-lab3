@@ -199,5 +199,6 @@
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jms:5.3.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.jms:javax.jms-api:2.0.1" level="project" />
+    <orderEntry type="library" name="Maven: ru.itmo:messages:1.0" level="project" />
   </component>
 </module>

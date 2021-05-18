@@ -1,15 +1,8 @@
 package ru.itmo.bllab3cashbackservice.model
 
+import ru.itmo.bllab3messages.CashbackStatus
 import java.time.LocalDateTime
 import javax.persistence.*
-
-enum class CashbackStatus {
-    NEW,
-    RECEIVED_INF,
-    APPROVED,
-    REJECTED,
-    RECEIVED_SUM
-}
 
 @Entity
 class Cashback(

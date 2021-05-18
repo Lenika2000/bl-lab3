@@ -14,11 +14,3 @@ class Client(
         @OneToOne(mappedBy = "client")
         var eUser: EUser = EUser()
 )
-
-
-data class ClientData(
-        val id: Long,
-        val firstName: String,
-        val lastName: String,
-        val balance: Number
-)

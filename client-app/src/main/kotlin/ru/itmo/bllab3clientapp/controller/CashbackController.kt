@@ -1,5 +1,6 @@
 package ru.itmo.bllab3clientapp.controller
 
+import org.springframework.jms.core.JmsTemplate
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import ru.itmo.bllab3clientapp.model.*
@@ -7,6 +8,8 @@ import ru.itmo.bllab3clientapp.repo.CashbackRepository
 import ru.itmo.bllab3clientapp.repo.ClientRepository
 import ru.itmo.bllab3clientapp.repo.ShopRepository
 import ru.itmo.bllab3clientapp.service.UserService
+import ru.itmo.bllab3messages.CashbackDataForService
+import ru.itmo.bllab3messages.CashbackStatus
 import javax.persistence.EntityNotFoundException
 
 data class CashbackRequestPayload(
@@ -27,6 +30,7 @@ class CashbackController(
         private val clientRepository: ClientRepository,
         private val userService: UserService,
         private val shopRepository: ShopRepository,
+        private val jmsTemplate: JmsTemplate
 ) {
 
     companion object {
@@ -48,8 +52,9 @@ class CashbackController(
             EntityNotFoundException("Магазин с названием ${payload.shopName} не найден!")
         }
 
-        val cashback = Cashback(0, client = client, shop = shop);
+        val cashback = Cashback(0, client = client, shop = shop)
         cashbackRepository.save(cashback)
+        jmsTemplate.convertAndSend("CreateCashbackQueue", CashbackDataForService(cashback.id, cashback.startDate, cashback.client.id, cashback.shop.id))
         return CashbackResponse("Заявка на получение кэшбека для клиента " +
                 "${client.firstName} ${client.lastName} от магазина ${shop.name} была создана.", cashback.id)
     }
@@ -57,7 +62,7 @@ class CashbackController(
     @GetMapping("status/{cashbackId}")
     @PreAuthorize("hasAnyRole('CLIENT')")
     fun getCashbackStatus(@PathVariable cashbackId: Long): CashbackStatus {
-        userService.checkClientAuthority(cashbackId);
+        userService.checkClientAuthority(cashbackId)
         return cashbackRepository.findById(cashbackId).orElseThrow {
             EntityNotFoundException("Кэшбек с id $cashbackId не найден!")
         }.status
@@ -66,11 +71,11 @@ class CashbackController(
     @GetMapping("{cashbackId}")
     @PreAuthorize("hasAnyRole('CLIENT')")
     fun getCashback(@PathVariable cashbackId: Long): CashbackData {
-        userService.checkClientAuthority(cashbackId);
+        userService.checkClientAuthority(cashbackId)
         val cashback = cashbackRepository.findById(cashbackId).orElseThrow {
             EntityNotFoundException("Кэшбек с id $cashbackId не найден!")
         }
-        return mapCashbackData(cashback);
+        return mapCashbackData(cashback)
     }
 
     @GetMapping("findByClient/{clientId}")
@@ -81,7 +86,7 @@ class CashbackController(
             EntityNotFoundException("Клиент с id $clientId не найден!")
         }
         return cashbackRepository.findCashbackByClient(client)
-                .map { cashback: Cashback -> mapCashbackDataForClient(cashback) };
+                .map { cashback: Cashback -> mapCashbackDataForClient(cashback) }
     }
 
 }

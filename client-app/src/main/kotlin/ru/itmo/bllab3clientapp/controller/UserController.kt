@@ -12,6 +12,7 @@ import ru.itmo.bllab3clientapp.auth.JwtUtils
 import ru.itmo.bllab3clientapp.auth.UserDetailsImpl
 import ru.itmo.bllab3clientapp.model.*
 import ru.itmo.bllab3clientapp.repo.*
+import ru.itmo.bllab3messages.ClientDataForService
 import java.util.stream.Collectors
 import javax.persistence.EntityNotFoundException
 
@@ -34,13 +35,8 @@ class UserController(
         private val jmsTemplate: JmsTemplate
 ) {
 
-    companion object {
-        fun mapClientData(client: Client): ClientData =
-                ClientData(client.id, client.firstName, client.lastName, client.balance)
-    }
-
     @PostMapping("/signin")
-    fun authenticateUser(@RequestBody loginRequest: LoginRequest): ResponseEntity<*>? {
+    fun authenticateUser(@RequestBody loginRequest: LoginRequest): ResponseEntity<*> {
         val authentication: Authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(loginRequest.login, loginRequest.password)
         )
@@ -75,9 +71,3 @@ class UserController(
         return MessageIdResponse("Регистрация клиента прошла успешно", client.id)
     }
 }
-
-data class ClientDataForService(
-        val id: Long,
-        val firstName: String,
-        val lastName: String,
-)

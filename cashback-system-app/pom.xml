@@ -3,16 +3,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>ru.itmo</groupId>
+        <artifactId>bl-lab3</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>ru.itmo</groupId>
-    <artifactId>bl-lab3-cashback-service</artifactId>
+
+    <artifactId>bl-lab3-cashback-system-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bl-lab3-cashback-service</name>
-    <description>Demo project for Spring Boot</description>
+    <name>bl-lab3-cashback-system-app</name>
+
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.4.21</kotlin.version>
@@ -101,6 +100,11 @@
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.itmo</groupId>
+            <artifactId>messages</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

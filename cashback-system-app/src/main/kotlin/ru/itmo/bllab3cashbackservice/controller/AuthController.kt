@@ -1,6 +1,7 @@
 package ru.itmo.bllab3cashbackservice.controller
 
 import org.springframework.http.ResponseEntity
+import org.springframework.jms.core.JmsTemplate
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -13,6 +14,7 @@ import ru.itmo.bllab3cashbackservice.auth.UserDetailsImpl
 import ru.itmo.bllab3cashbackservice.model.*
 import ru.itmo.bllab3cashbackservice.repo.*
 import ru.itmo.bllab3cashbackservice.service.UserService
+import ru.itmo.bllab3messages.ShopDataForClient
 import java.util.stream.Collectors
 import javax.persistence.EntityNotFoundException
 
@@ -38,7 +40,8 @@ class UserController(
         private val userRepository: UserRepository,
         private val roleRepository: RoleRepository,
         private val shopRepository: ShopRepository,
-        private val adminRepository: AdminRepository
+        private val adminRepository: AdminRepository,
+        private val jmsTemplate: JmsTemplate
 ) {
 
     companion object {
@@ -93,6 +96,8 @@ class UserController(
         shop.eUser = user
         userRepository.save(user)
         shopRepository.save(shop)
+        jmsTemplate.convertAndSend("CreateShopQueue",
+                ShopDataForClient(shop.id, shop.name) )
         return MessageIdResponse("Регистрация магазина прошла успешно", shop.id)
     }
 

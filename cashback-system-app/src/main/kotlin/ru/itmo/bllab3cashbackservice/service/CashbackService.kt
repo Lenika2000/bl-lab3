@@ -5,23 +5,16 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.support.TransactionTemplate
 import ru.itmo.bllab3cashbackservice.controller.CashbackChangeRequestPayload
-import ru.itmo.bllab3cashbackservice.model.CashbackStatus
 import ru.itmo.bllab3cashbackservice.repo.CashbackRepository
-import ru.itmo.bllab3cashbackservice.repo.ClientRepository
+import ru.itmo.bllab3messages.CashbackChangeStatusRequest
+import ru.itmo.bllab3messages.CashbackStatus
 import java.time.LocalDateTime
 import javax.persistence.EntityNotFoundException
-
-data class CashbackChangeStatusRequest (
-        val cashbackId: Long,
-        val status: CashbackStatus,
-        val cashbackSum: Double
-)
 
 @Service
 class CashbackService(
         private val cashbackRepository: CashbackRepository,
         private val messageService: MessageService,
-        private val clientRepository: ClientRepository,
         private val template: TransactionTemplate,
         private val jmsTemplate: JmsTemplate
 ) {
@@ -36,7 +29,7 @@ class CashbackService(
                     cashback.status = CashbackStatus.REJECTED
                     messageService.sendNotificationToClient("Кэшбек отклонен", cashback.client)
                 }
-                // todo увеличить баланс на стороне клиента
+
                 jmsTemplate.convertAndSend("ChangeCashbackStatusQueue",
                         CashbackChangeStatusRequest(cashback.id, cashback.status, cashback.cashbackSum) )
                 cashbackRepository.save(cashback)

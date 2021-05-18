@@ -7,6 +7,7 @@ import ru.itmo.bllab3cashbackservice.repo.CashbackRepository
 import ru.itmo.bllab3cashbackservice.repo.ClientRepository
 import ru.itmo.bllab3cashbackservice.repo.ShopRepository
 import ru.itmo.bllab3cashbackservice.service.UserService
+import ru.itmo.bllab3messages.CashbackStatus
 import javax.persistence.EntityNotFoundException
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -31,7 +32,7 @@ class CashbackController(
     @GetMapping("status/{cashbackId}")
     @PreAuthorize("hasAnyRole('ADMIN','SHOP')")
     fun getCashbackStatus(@PathVariable cashbackId: Long): CashbackStatus {
-        userService.checkShopAuthority(cashbackId);
+        userService.checkShopAuthority(cashbackId)
         return cashbackRepository.findById(cashbackId).orElseThrow {
             EntityNotFoundException("Кэшбек с id $cashbackId не найден!")
         }.status
@@ -40,22 +41,21 @@ class CashbackController(
     @GetMapping("{cashbackId}")
     @PreAuthorize("hasAnyRole('ADMIN','SHOP')")
     fun getCashback(@PathVariable cashbackId: Long): CashbackData {
-        userService.checkShopAuthority(cashbackId);
+        userService.checkShopAuthority(cashbackId)
         val cashback = cashbackRepository.findById(cashbackId).orElseThrow {
             EntityNotFoundException("Кэшбек с id $cashbackId не найден!")
         }
-        return mapCashbackData(cashback);
+        return mapCashbackData(cashback)
     }
 
     @GetMapping("findByClient/{clientId}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     fun getClientCashbacks(@PathVariable clientId: Long): Iterable<CashbackData> {
-//        userService.checkClientAuthority(clientId)
         val client = clientRepository.findById(clientId).orElseThrow {
             EntityNotFoundException("Клиент с id $clientId не найден!")
         }
         return cashbackRepository.findCashbackByClient(client)
-                .map { cashback: Cashback -> mapCashbackData(cashback) };
+                .map { cashback: Cashback -> mapCashbackData(cashback) }
     }
 
     @GetMapping("findByShop/{shopId}")
@@ -66,7 +66,7 @@ class CashbackController(
             EntityNotFoundException("Магазин с id $shopId не найден!")
         }
         return cashbackRepository.findCashbackByShop(shop)
-                .map { cashback: Cashback -> mapCashbackDataForShop(cashback) };
+                .map { cashback: Cashback -> mapCashbackDataForShop(cashback) }
     }
 
 }

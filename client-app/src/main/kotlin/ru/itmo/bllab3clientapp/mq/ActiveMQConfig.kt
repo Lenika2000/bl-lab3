@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory
 import org.springframework.jms.core.JmsTemplate
+import org.springframework.jms.support.converter.MappingJackson2MessageConverter
+import org.springframework.jms.support.converter.MessageConverter
+import org.springframework.jms.support.converter.MessageType
+import java.util.*
 import javax.jms.ConnectionFactory
 
 
@@ -18,6 +22,7 @@ class ActiveMQConfig {
     fun connectionFactory(): ConnectionFactory {
         val activeMQConnectionFactory = ActiveMQConnectionFactory()
         activeMQConnectionFactory.brokerURL = brokerUrl
+        activeMQConnectionFactory.trustedPackages = arrayListOf("ru.itmo.bllab3messages","java")
         return activeMQConnectionFactory
     }
 
@@ -30,10 +35,10 @@ class ActiveMQConfig {
     }
 
     @Bean
-    fun jmsListenerContainerFactory(): DefaultJmsListenerContainerFactory? {
+    fun jmsListenerContainerFactory(): DefaultJmsListenerContainerFactory {
         val factory = DefaultJmsListenerContainerFactory()
-        factory.setConnectionFactory(connectionFactory())
-        factory.setPubSubDomain(true)
+        factory.setConnectionFactory(connectionFactory()!!)
+//        factory.setPubSubDomain(true)
         return factory
     }
 }

@@ -12,6 +12,5 @@ data class Role(
 
 enum class ERole {
     ROLE_CLIENT,
-    ROLE_SHOP,
     ROLE_ADMIN
 }

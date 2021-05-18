@@ -1,5 +1,7 @@
 package ru.itmo.bllab3clientapp.service
 
+
+
 import org.springframework.stereotype.Service
 import ru.itmo.bllab3clientapp.model.Client
 

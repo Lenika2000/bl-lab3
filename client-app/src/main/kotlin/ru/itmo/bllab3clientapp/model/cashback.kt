@@ -1,15 +1,8 @@
 package ru.itmo.bllab3clientapp.model
 
+import ru.itmo.bllab3messages.CashbackStatus
 import java.time.LocalDateTime
 import javax.persistence.*
-
-enum class CashbackStatus {
-    NEW,
-    RECEIVED_INF,
-    APPROVED,
-    REJECTED,
-    RECEIVED_SUM
-}
 
 @Entity
 class Cashback(
@@ -21,7 +14,6 @@ class Cashback(
         var client: Client = Client(),
         @ManyToOne
         var shop: Shop = Shop(),
-        @Column(name = "is_paid")
         var status: CashbackStatus = CashbackStatus.NEW,
         @Column(name = "cashback_sum")
         var cashbackSum: Double = 0.0

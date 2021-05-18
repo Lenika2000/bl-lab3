@@ -19,16 +19,14 @@ class PopulateDBService(
         private val encoder: PasswordEncoder,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-//        val roleClient = Role(name = ERole.ROLE_CLIENT)
         val roleShop = Role(name = ERole.ROLE_SHOP)
         val roleAdmin = Role(name = ERole.ROLE_ADMIN)
         roleRepository.save(roleAdmin)
-//        roleRepository.save(roleClient)
         roleRepository.save(roleShop)
-//        val adm = Admin(0, "Маньшина", "Елена");
-//        val admin = EUser(0, "admin", encoder.encode("666666"), null,  adm, setOf(roleAdmin))
-//        adm.eUser = admin
-//        userRepository.save(admin)
-//        adminRepository.save(adm)
+        val adm = Admin(0, "Маньшина", "Елена")
+        val admin = EUser(0, "admin", encoder.encode("666666"), null,  adm, setOf(roleAdmin))
+        adm.eUser = admin
+        userRepository.save(admin)
+        adminRepository.save(adm)
     }
 }

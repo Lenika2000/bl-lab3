@@ -13,7 +13,6 @@ import ru.itmo.bllab3cashbackservice.repo.UserRepository
 @Service
 class UserService(
         private val userRepository: UserRepository,
-        private val cashbackRepository: CashbackRepository
 ) {
     fun getCurrentUserId(): Long = (SecurityContextHolder.getContext().authentication.principal as UserDetailsImpl).id
 
