@@ -90,7 +90,7 @@ class UserController(
             throw IllegalStateException("Пользователь с таким логином уже зарегистрирован")
         val shop = Shop(0, payload.name)
         val user = EUser(
-                0, payload.login, encoder.encode(payload.password), null,  null,
+                0, payload.login, encoder.encode(payload.password), shop,  null,
                 setOf(roleRepository.findRoleByName(ERole.ROLE_SHOP).get())
         )
         shop.eUser = user

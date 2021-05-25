@@ -19,7 +19,7 @@ class SpringFoxConfig {
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ru.itmo.bllab1.controller"))
+                .apis(RequestHandlerSelectors.basePackage("ru.itmo.bllab3clientapp.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
